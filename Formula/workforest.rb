@@ -1,13 +1,15 @@
-# The publish_homebrew workflow rewrites url/sha256 on release and pushes
-# this file to the ArkadyBuryakov/homebrew-tap repo; this copy is the source
-# of truth for everything else (deps, completions, caveats, test).
+# Template — not an installable formula. On release the publish_homebrew
+# workflow substitutes 0.3.0 and 922a9c89ea7c79082cb83e29c6473d2ee04ed7b8e582d78f852220bbc792bdbf and pushes the rendered
+# Formula/workforest.rb to the ArkadyBuryakov/homebrew-tap repo; nothing is
+# committed back here. This copy is the source of truth for everything else
+# (deps, completions, caveats, test).
 class Workforest < Formula
   include Language::Python::Virtualenv
 
   desc "Git worktree forest management with per-branch setup hooks"
   homepage "https://github.com/ArkadyBuryakov/workforest"
-  url "https://github.com/ArkadyBuryakov/workforest/archive/v0.2.2.tar.gz"
-  sha256 "0f1800613d6fe942b0b76582e08f646a3287e28e0e6baa492b2540ad145d19de"
+  url "https://github.com/ArkadyBuryakov/workforest/archive/v0.3.0.tar.gz"
+  sha256 "922a9c89ea7c79082cb83e29c6473d2ee04ed7b8e582d78f852220bbc792bdbf"
   license "MIT"
   head "https://github.com/ArkadyBuryakov/workforest.git", branch: "main"
 
