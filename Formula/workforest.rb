@@ -1,5 +1,5 @@
 # Template — not an installable formula. On release the publish_homebrew
-# workflow substitutes 0.4.0 and 359ad9afac31044993e077edae174730ada294ae8ffe486b6f576bdf34e5f893 and pushes the rendered
+# workflow substitutes 0.5.0 and 4101bedbe39adf321ed6d76aac0c8e09d561840725f4ee1741d0295f370ce7fa and pushes the rendered
 # Formula/workforest.rb to the ArkadyBuryakov/homebrew-tap repo; nothing is
 # committed back here. This copy is the source of truth for everything else
 # (deps, completions, caveats, test).
@@ -8,8 +8,8 @@ class Workforest < Formula
 
   desc "Git worktree forest management with per-branch setup hooks"
   homepage "https://github.com/ArkadyBuryakov/workforest"
-  url "https://github.com/ArkadyBuryakov/workforest/archive/v0.4.0.tar.gz"
-  sha256 "359ad9afac31044993e077edae174730ada294ae8ffe486b6f576bdf34e5f893"
+  url "https://github.com/ArkadyBuryakov/workforest/archive/v0.5.0.tar.gz"
+  sha256 "4101bedbe39adf321ed6d76aac0c8e09d561840725f4ee1741d0295f370ce7fa"
   license "MIT"
   head "https://github.com/ArkadyBuryakov/workforest.git", branch: "main"
 
@@ -23,6 +23,17 @@ class Workforest < Formula
 
   def install
     virtualenv_install_with_resources
+
+    # Homebrew symlinks the venv's man pages (libexec/share/man) into
+    # man1/man5. Move the files themselves instead: `workforest shell-init`
+    # adds a $MANPATH entry whenever the pages are still in the venv.
+    %w[man1 man5].each do |section|
+      Dir[libexec/"share/man/#{section}/*"].each do |page|
+        link = man/section/File.basename(page)
+        rm link if link.symlink?
+        (man/section).install page
+      end
+    end
 
     # Completions for the plain binary; the wf shell function itself comes
     # from `workforest shell-init` (see caveats).
@@ -46,6 +57,10 @@ class Workforest < Formula
   test do
     assert_match version.to_s, shell_output("#{bin}/workforest --version")
     assert_match version.to_s, shell_output("#{bin}/wf --version")
+    assert_path_exists man1/"workforest.1"
+    assert_path_exists man1/"wf.1"
+    assert_path_exists man5/"workforest.5"
+    assert_path_exists man5/"wf.5"
     (testpath/"init.bash").write shell_output("#{bin}/workforest shell-init bash")
     system "bash", "-n", testpath/"init.bash"
   end
