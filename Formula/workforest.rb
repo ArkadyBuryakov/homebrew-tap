@@ -1,5 +1,5 @@
 # Template — not an installable formula. On release the publish_homebrew
-# workflow substitutes 0.6.1 and 2abf2fb5e05804948ed4f12618f71d299cc1eda0adb3119b58ccb62bca0c6605 and pushes the rendered
+# workflow substitutes 0.7.0 and 3eb222c3d622267aa1871b9c05cccea0dc6e94c07d101fb732f3a88c05a8d732 and pushes the rendered
 # Formula/workforest.rb to the ArkadyBuryakov/homebrew-tap repo; nothing is
 # committed back here. This copy is the source of truth for everything else
 # (deps, completions, caveats, test).
@@ -8,8 +8,8 @@ class Workforest < Formula
 
   desc "Git worktree forest management with per-branch setup hooks"
   homepage "https://github.com/ArkadyBuryakov/workforest"
-  url "https://github.com/ArkadyBuryakov/workforest/archive/v0.6.1.tar.gz"
-  sha256 "2abf2fb5e05804948ed4f12618f71d299cc1eda0adb3119b58ccb62bca0c6605"
+  url "https://github.com/ArkadyBuryakov/workforest/archive/v0.7.0.tar.gz"
+  sha256 "3eb222c3d622267aa1871b9c05cccea0dc6e94c07d101fb732f3a88c05a8d732"
   license "MIT"
   head "https://github.com/ArkadyBuryakov/workforest.git", branch: "main"
 
