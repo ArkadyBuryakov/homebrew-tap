@@ -41,6 +41,7 @@ With the following commands, you can install the latest generally available (GA)
 ```sh
 # Formulae
 brew install arkadyburyakov/tap/workforest
+brew install arkadyburyakov/tap/jev-preview
 ```
 
 Prereleases (including as alpha's, beta's, and release candidates) will not be available in this tap.
