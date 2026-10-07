@@ -3,8 +3,8 @@
 class KatanaTui < Formula
   desc "Terminal client for Nonograms Katana user puzzles"
   homepage "https://github.com/ArkadyBuryakov/katana-desktop"
-  url "https://github.com/ArkadyBuryakov/katana-desktop/archive/v1.1.2.tar.gz"
-  sha256 "f7943d2df1f4d928547fd8aca1f8ee3b6ad15da7decd9a7987987153c0122b54"
+  url "https://github.com/ArkadyBuryakov/katana-desktop/archive/v1.1.3.tar.gz"
+  sha256 "a753053d23bd0e30871f5e1f72fb4e7107f928289cf2587a1719d76c7dace889"
   license "MIT"
   head "https://github.com/ArkadyBuryakov/katana-desktop.git", branch: "main"
 
