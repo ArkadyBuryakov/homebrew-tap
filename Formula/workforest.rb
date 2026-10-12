@@ -1,48 +1,38 @@
 # Template — not an installable formula. On release the publish_homebrew
-# workflow substitutes 0.8.0 and fc00bce9a4e24bb42731ba7b65abe521c92bc2535381719d1b3122c10f93b43f and pushes the rendered
+# workflow substitutes 0.9.0 and 3fb66547a575bece3130ba1e9e0efe614654871fd504cd5f7f308469b938fc0d and pushes the rendered
 # Formula/workforest.rb to the ArkadyBuryakov/homebrew-tap repo; nothing is
 # committed back here. This copy is the source of truth for everything else
 # (deps, completions, caveats, test).
 class Workforest < Formula
-  include Language::Python::Virtualenv
-
   desc "Git worktree forest management with per-branch setup hooks"
   homepage "https://github.com/ArkadyBuryakov/workforest"
-  url "https://github.com/ArkadyBuryakov/workforest/archive/v0.8.0.tar.gz"
-  sha256 "fc00bce9a4e24bb42731ba7b65abe521c92bc2535381719d1b3122c10f93b43f"
+  url "https://github.com/ArkadyBuryakov/workforest/archive/v0.9.0.tar.gz"
+  sha256 "3fb66547a575bece3130ba1e9e0efe614654871fd504cd5f7f308469b938fc0d"
   license "MIT"
   head "https://github.com/ArkadyBuryakov/workforest.git", branch: "main"
 
-  depends_on "fzf"
-  depends_on "python@3.14"
-
-  resource "pyyaml" do
-    url "https://files.pythonhosted.org/packages/05/8e/961c0007c59b8dd7729d542c61a4d537767a59645b82a0b521206e1e25c2/pyyaml-6.0.3.tar.gz"
-    sha256 "d76623373421df22fb4cf8817020cbb7ef15c725b9d5e45f17e189bfc384190f"
-  end
+  depends_on "rust" => :build
 
   def install
-    virtualenv_install_with_resources
+    # `wf` is the same program under its short name; the crate's own `wf`
+    # binary exists for installs that cannot link (a PyPI wheel).
+    system "cargo", "install", "--bin", "workforest", *std_cargo_args
+    bin.install_symlink "workforest" => "wf"
 
-    # Homebrew symlinks the venv's man pages (libexec/share/man) into
-    # man1/man5. Move the files themselves instead: `workforest shell-init`
-    # adds a $MANPATH entry whenever the pages are still in the venv.
-    %w[man1 man5].each do |section|
-      Dir[libexec/"share/man/#{section}/*"].each do |page|
-        link = man/section/File.basename(page)
-        rm link if link.symlink?
-        (man/section).install page
-      end
-    end
+    # Man pages, from where the PyPI wheel ships them as data. Homebrew
+    # links them next to bin/, where man(1) finds them on its own, so
+    # `workforest shell-init` leaves $MANPATH alone.
+    man1.install Dir["packaging/pypi/data/share/man/man1/*"]
+    man5.install Dir["packaging/pypi/data/share/man/man5/*"]
 
     # Completions for the plain binary; the wf shell function itself comes
     # from `workforest shell-init` (see caveats).
-    bash_completion.install "src/workforest/shell/completion.bash" => "workforest"
+    bash_completion.install "resources/shell/completion.bash" => "workforest"
     zsh_completion.install "completions/_workforest"
 
     # Reference configs, mirroring the Arch package's /usr/share/doc layout.
-    (doc/"examples").install "src/workforest/examples/config.yaml"
-    (doc/"examples").install "src/workforest/examples/.workforest.yaml" => "workforest.project.yaml"
+    (doc/"examples").install "resources/examples/config.yaml"
+    (doc/"examples").install "resources/examples/.workforest.yaml" => "workforest.project.yaml"
   end
 
   def caveats
